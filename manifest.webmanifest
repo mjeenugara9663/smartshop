@@ -2,7 +2,7 @@
   "id": "./",
   "name": "Vrisama SmartShop Prototype",
   "short_name": "SmartShop",
-  "description": "Two-store demo. No real transactions.",
+  "description": "Vrisama SmartShop v0.2.2 interactive demonstration; not for live customer transactions.",
   "start_url": "./#/discover",
   "scope": "./",
   "display": "standalone",
