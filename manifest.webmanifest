@@ -1,0 +1,19 @@
+{
+  "id": "./",
+  "name": "Vrisama SmartShop Prototype",
+  "short_name": "SmartShop",
+  "description": "Two-store demo. No real transactions.",
+  "start_url": "./#/discover",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f4f7f4",
+  "theme_color": "#102c35",
+  "icons": [
+    {
+      "src": "./assets/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
