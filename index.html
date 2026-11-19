@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0b2330">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" href="./assets/icon-192.png" type="image/png">
+<meta name="description" content="Vrisama SmartShop — two-store interactive prototype. No live transactions.">
+<title>Vrisama SmartShop • Prototype</title>
+<style>
+  :root{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#17323a;background:#f4f7f4;font-synthesis:none}
+  *{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;min-height:100vh}
+  button,input,select{font:inherit} button{cursor:pointer} button:disabled{cursor:not-allowed;opacity:.5} a{color:inherit;text-decoration:none}
+  :focus-visible{outline:3px solid #14ab91;outline-offset:2px}
+  .app{display:grid;grid-template-columns:242px minmax(0,1fr);min-height:100vh}
+  .sidebar{background:#102c35;color:#d0e7e1;padding:26px 15px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:24px}
+  .logo{display:flex;gap:12px;align-items:center;padding:3px 10px;color:#fff}
+  .logo-mark{display:grid;place-items:center;width:40px;height:40px;border-radius:14px;background:#bbefb0;color:#19362a;font-size:22px;font-weight:900;box-shadow:0 8px 30px #071b1c80}
+  .logo small{display:block;font-size:11px;letter-spacing:2px;color:#a7c7c3;font-weight:700;margin-bottom:3px}
+  .logo strong{font-size:18px;letter-spacing:-.6px}
+  .side-label{text-transform:uppercase;letter-spacing:1.8px;font-size:10px;color:#8baaa7;padding:0 12px;margin:5px 0}
+  .nav{display:grid;gap:6px}.nav a{border-radius:13px;padding:12px 14px;display:flex;gap:12px;align-items:center;font-weight:650;font-size:13px;transition:.17s;color:#afc9c4}
+  .nav a.active,.nav a:hover{background:#22505a;color:#fff}.nav .nicon{width:20px;font-size:17px;text-align:center}
+  .sidebar-foot{margin-top:auto;background:#19404a;border:1px solid #35616a;border-radius:16px;padding:14px;font-size:12px;line-height:1.6;color:#b9d9d6}
+  .sidebar-foot b{display:block;color:#e4f8d8;font-size:12px;margin-bottom:3px}
+  .main{min-width:0}.topbar{height:82px;background:#fff;border-bottom:1px solid #e0eae6;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(20px,4.2vw,60px);gap:14px}
+  .topbar h1{font-size:19px;letter-spacing:-.7px;margin:0;color:#142e36}.topbar p{font-size:12px;color:#6e8588;margin:4px 0 0}
+  .top-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.pill{border:1px solid #d3e5dc;background:#f1f9ee;color:#2b6958;border-radius:100px;padding:7px 11px;font-size:11px;font-weight:750;white-space:nowrap}
+  .tag{background:#fff3d9;color:#89571c;border-radius:20px;padding:6px 10px;font-size:11px;font-weight:800;white-space:nowrap}
+  .content{max-width:1240px;margin:auto;padding:30px clamp(20px,4.2vw,60px) 80px}
+  .hero{min-height:245px;border-radius:25px;background:linear-gradient(117deg,#122e38 1%,#1a4f4b 68%,#326a51);color:#fff;padding:35px 40px;display:flex;justify-content:space-between;align-items:center;gap:24px;overflow:hidden;position:relative}
+  .hero:after{content:"";position:absolute;border:1px solid #ffffff2e;width:330px;height:330px;border-radius:50%;right:-60px;top:-160px;box-shadow:0 0 0 50px #ffffff0a,0 0 0 100px #ffffff08}
+  .hero h2{font-size:clamp(27px,4vw,43px);margin:10px 0;letter-spacing:-1.8px;line-height:1.09;max-width:610px}
+  .hero p{color:#c8e4d8;max-width:530px;font-size:14px;line-height:1.65;margin:12px 0 22px}
+  .hero .eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:2px;font-weight:800;color:#b6edac}
+  .hero-art{flex:0 0 200px;align-self:stretch;display:flex;justify-content:center;align-items:center;position:relative;z-index:1}
+  .hero-orbit{font-size:96px;transform:rotate(-7deg);filter:drop-shadow(0 18px 20px #001a2480)}
+  .btn{border:0;border-radius:12px;padding:11px 17px;font-size:13px;font-weight:800;background:#e7eee8;color:#193938;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:41px}
+  .btn.primary{background:#bdefa9;color:#17372c}.btn.dark{background:#153b40;color:#fff}.btn.outline{border:1px solid #bfd2ca;background:#fff;color:#22494a}.btn.danger{background:#ffe8e7;color:#a23c39}.btn.small{padding:7px 10px;font-size:11px;min-height:31px}.btn:hover:not(:disabled){filter:brightness(.975);transform:translateY(-1px)}
+  .section-title{display:flex;justify-content:space-between;align-items:flex-end;margin:30px 0 15px;gap:12px}.section-title h2{font-size:22px;margin:0;letter-spacing:-.75px}.section-title p{font-size:12px;color:#688080;margin:5px 0 0}
+  .grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:17px}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+  .shop-card,.panel,.product-card{background:#fff;border:1px solid #e0ebe7;border-radius:20px;overflow:hidden;box-shadow:0 5px 22px #17332907}
+  .shop-cover{height:148px;background:linear-gradient(115deg,#dfeadd,#f0f7e3);display:flex;align-items:center;justify-content:space-between;padding:20px 30px;overflow:hidden}
+  .shop-cover.fashion{background:linear-gradient(120deg,#f7dfd9,#f2e9f5)}
+  .cover-icon{font-size:75px;filter:drop-shadow(0 12px 13px #23332925)}.cover-bubble{background:#ffffffa8;border:1px solid #ffffff90;color:#47685b;padding:8px 11px;border-radius:20px;font-size:11px;font-weight:800}
+  .shop-details{padding:23px}.shop-details h3{font-size:20px;margin:0 0 8px;letter-spacing:-.5px}.shop-details p{font-size:13px;color:#69807f;line-height:1.6;min-height:43px;margin:0 0 18px}
+  .meta{display:flex;gap:10px;align-items:center;margin-bottom:15px;flex-wrap:wrap}.meta span{font-size:11px;background:#f3f8f5;color:#54756a;border-radius:8px;padding:5px 8px}
+  .note{border:1px solid #dce9e5;border-radius:15px;background:#edf7f1;padding:14px 16px;color:#3c675d;font-size:12px;line-height:1.6}
+  .note.warning{background:#fff8e9;border-color:#f3dfbb;color:#76552b}.note strong{color:inherit}
+  .panel{padding:24px}.panel h3{margin:0 0 8px;font-size:18px;letter-spacing:-.4px}.panel p,.muted{color:#6a8280;font-size:13px;line-height:1.65}.panel + .panel{margin-top:18px}
+  .shop-head{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:22px}.shop-head h2{font-size:29px;letter-spacing:-1px;margin:6px 0}.back{color:#567e72;font-size:12px;font-weight:800}
+  .store-layout{display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:22px;align-items:start}.products{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+  .product-art{height:130px;background:#f0f3ef;display:grid;place-items:center;font-size:59px;overflow:hidden}.product-art img{width:100%;height:100%;object-fit:cover}
+  .product-art.f1{background:#e7f0e6}.product-art.f2{background:#fcecdc}.product-art.f3{background:#e9e9f5}.product-art.f4{background:#ecf4f5}.product-art.f5{background:#fce8eb}.product-art.f6{background:#f7f0df}
+  .product-info{padding:14px}.product-info h4{font-size:13px;margin:0 0 5px;min-height:34px;line-height:1.4}.product-info .price{font-size:17px;font-weight:850;margin:6px 0 12px;color:#193f38}
+  .cart{position:sticky;top:24px;padding:20px}.cart h3{margin:0 0 14px}.cart-row{display:flex;gap:10px;justify-content:space-between;padding:12px 0;border-bottom:1px solid #edf1ef;align-items:center}
+  .cart-row b{font-size:12px;display:block;line-height:1.4}.cart-row small{font-size:11px;color:#718380}
+  .qty{display:flex;align-items:center;border:1px solid #dce6df;border-radius:9px;overflow:hidden}.qty button{border:0;background:#f3f7f4;padding:5px 9px;color:#31554c}.qty b{padding:0 7px;min-width:20px;text-align:center;font-size:12px}
+  .cart-total{display:flex;justify-content:space-between;align-items:center;margin:18px 0 13px;font-size:13px}.cart-total strong{font-size:20px;color:#173b34}.cart .btn{width:100%}
+  .offer-strip{display:flex;gap:12px;background:linear-gradient(100deg,#1e5549,#2e8766);border-radius:14px;padding:14px 18px;color:white;align-items:center;justify-content:space-between;margin-bottom:20px}
+  .offer-strip b{font-size:14px}.offer-strip small{display:block;color:#d2f2e2;margin-top:5px;font-size:11px}.offer-strip .discount{font-size:32px;font-weight:900;letter-spacing:-1px;white-space:nowrap}
+  .form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}.field{display:flex;flex-direction:column;gap:7px}.field.wide{grid-column:1/-1}.field label{font-size:12px;font-weight:800;color:#3c5653}
+  .field input,.field select{border-radius:11px;border:1px solid #d2e0db;background:white;min-height:43px;padding:10px 12px;font-size:13px;color:#243e39;max-width:100%}.field input[type=file]{padding:8px;font-size:11px}
+  .form-actions{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:9px;align-items:center}.subcopy{color:#738982;font-size:11px}
+  .tabbar{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:18px}.tab{background:#f0f5f2;color:#4b6e64;border:1px solid #dfeae4;border-radius:11px;font-size:12px;font-weight:800;padding:9px 12px}.tab.active{background:#234c44;color:white;border-color:#234c44}
+  .statrow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-bottom:20px}.stat{background:#fff;padding:19px;border:1px solid #e0ebe7;border-radius:16px}.stat .num{font-size:27px;font-weight:900;letter-spacing:-1px;margin:8px 0 1px}.stat small{color:#6c8280;font-size:11px;font-weight:700}
+  .item-list{display:grid;gap:10px}.item{display:flex;align-items:center;justify-content:space-between;gap:16px;border:1px solid #e3ede8;border-radius:13px;padding:13px 14px;background:#fff}.item h4{font-size:13px;margin:0 0 5px}.item p{font-size:11px;color:#70817f;margin:0;line-height:1.5}
+  .status{display:inline-block;font-size:10px;font-weight:900;border-radius:8px;padding:5px 8px;text-transform:uppercase;letter-spacing:.4px}.status.pending{background:#fff2d8;color:#916322}.status.approved{background:#e4f7e7;color:#267547}.status.rejected{background:#fce8e7;color:#af4742}.status.blocked{background:#fce8e7;color:#af4742}
+  .list-empty{border:1px dashed #cee0d5;border-radius:15px;color:#748984;padding:27px;text-align:center;font-size:13px;background:#fafcfb}
+  .audit-table{width:100%;border-collapse:collapse;font-size:12px}.audit-table th{text-align:left;color:#81918d;font-size:10px;letter-spacing:.7px;text-transform:uppercase;font-weight:850;padding:11px 8px}.audit-table td{border-top:1px solid #e9efeb;padding:12px 8px;vertical-align:top;line-height:1.5}.audit-table td:first-child{white-space:nowrap;color:#68817b}
+  .modal-backdrop{position:fixed;inset:0;background:#071c2188;display:flex;align-items:center;justify-content:center;padding:20px;z-index:90}.modal{background:white;border-radius:22px;width:min(500px,100%);padding:27px;box-shadow:0 26px 100px #061f2680}.modal h3{margin:0 0 10px;font-size:22px}.modal pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#f4f8f5;padding:15px;border-radius:12px;color:#1f4238;font-family:ui-monospace,monospace;font-size:12px;line-height:1.8}.modal-actions{display:flex;flex-wrap:wrap;gap:8px}
+  .toast{position:fixed;right:20px;bottom:22px;background:#183c40;color:#fff;padding:13px 17px;border-radius:12px;box-shadow:0 15px 55px #061f2644;z-index:100;max-width:370px;font-size:13px;line-height:1.5}
+  .website-tile{background:#fff;border:1px solid #e0ebe7;border-radius:20px;padding:21px;display:grid;gap:13px;min-width:0;box-shadow:0 5px 22px #17332907}
+  .website-identity{display:flex;align-items:center;gap:13px}.website-icon{display:grid;place-items:center;background:#edf5eb;border-radius:13px;width:54px;height:54px;font-size:27px;flex:0 0 54px}
+  .website-identity h3{margin:0 0 4px;font-size:17px}.website-identity p{margin:0;font-size:12px;color:#78908a}
+  .website-url{border:1px dashed #c9ded3;background:#f4faf5;border-radius:12px;padding:12px;overflow-wrap:anywhere;color:#1c5748;font-size:12px;font-weight:800}
+  .website-actions{display:flex;gap:8px;flex-wrap:wrap}.website-actions .btn{flex:1 1 128px}
+  .website-muted{font-size:11px;color:#7b8c86;line-height:1.6}.website-banner{margin-top:18px}
+  .footer{color:#81918e;font-size:11px;text-align:center;margin-top:40px;line-height:1.8}
+  @media(max-width:1070px){.app{grid-template-columns:80px minmax(0,1fr)}.sidebar{padding:22px 9px}.logo{justify-content:center;padding:0}.logo-mark{flex:0 0 40px}.logo .brandwords,.side-label,.nav .navlabel,.sidebar-foot{display:none}.nav a{justify-content:center;padding:14px}.nav .nicon{font-size:20px}.store-layout{grid-template-columns:1fr}.cart{position:static}.products{grid-template-columns:repeat(3,minmax(0,1fr))}}
+  @media(max-width:730px){.app{display:block}.sidebar{position:sticky;top:0;z-index:30;height:auto;display:flex;flex-direction:row;align-items:center;justify-content:space-between;padding:8px 12px;gap:5px}.logo .brandwords{display:none}.logo-mark{height:35px;width:35px;border-radius:10px}.nav{display:flex;gap:2px}.nav a{padding:8px 10px;border-radius:9px}.nav .nicon{font-size:18px}.topbar{padding:14px 19px;height:auto;min-height:72px}.topbar h1{font-size:16px}.topbar p{font-size:11px}.top-right{justify-content:flex-end}.top-right .pill{display:none}.content{padding:18px 16px 50px}.hero{padding:26px 23px;min-height:195px}.hero-art{flex-basis:85px}.hero-orbit{font-size:60px}.grid2,.grid3,.statrow{grid-template-columns:1fr}.products{grid-template-columns:repeat(2,minmax(0,1fr))}.section-title h2{font-size:20px}.shop-head h2{font-size:24px}.panel{padding:17px}.form-grid{grid-template-columns:1fr}.audit-scroll{overflow:auto}.audit-table{min-width:580px}}
+  @media(max-width:420px){.nav a{padding:8px 7px}.nav .nicon{font-size:16px}.sidebar{padding:8px 7px}.website-actions{display:grid;grid-template-columns:1fr 1fr}.website-actions .btn{padding:9px 8px;font-size:11px}.top-right .tag{font-size:9px}.hero-art{display:none}.products{gap:9px}.product-art{height:115px}.product-info{padding:10px}.product-info h4{font-size:12px}.shop-cover{height:120px}.cover-icon{font-size:57px}.shop-details{padding:19px}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+  <a href="#/discover" class="logo" aria-label="Vrisama SmartShop home"><span class="logo-mark">V</span><span class="brandwords"><small>VRISAMA</small><strong>SmartShop</strong></span></a>
+  <div class="side-label">Prototype workspace</div>
+  <nav class="nav" aria-label="Main navigation">
+    <a data-nav="discover" href="#/discover"><span class="nicon">🏬</span><span class="navlabel">Explore stores</span></a>
+    <a data-nav="websites" href="#/websites"><span class="nicon">🌐</span><span class="navlabel">My Websites</span></a>
+    <a data-nav="owner" href="#/owner"><span class="nicon">🛍️</span><span class="navlabel">Shopkeeper</span></a>
+    <a data-nav="admin" href="#/admin"><span class="nicon">🛡️</span><span class="navlabel">Admin control</span></a>
+    <a data-nav="plans" href="#/plans"><span class="nicon">💳</span><span class="navlabel">Future plans</span></a>
+  </nav>
+  <div class="sidebar-foot"><b>Safe by design</b>Only approved products and structured orders. Customer conversations stay in WhatsApp.</div>
+</aside>
+<main class="main">
+  <header class="topbar"><div><h1 id="page-title">Store discovery</h1><p id="page-subtitle">Two shops. One reusable storefront engine.</p></div><div class="top-right"><span class="pill">● Interactive local demo</span><span class="tag">PROTOTYPE ONLY</span></div></header>
+  <div id="content" class="content" aria-live="polite">
+<section class="hero"><div><div class="eyebrow">VRISAMA · SMART COMMERCE</div><h2>Every local shop deserves a digital storefront.</h2><p>Discover two sample businesses, browse their products and see how WhatsApp ordering will work.</p><a class="btn primary" href="./mobile-preview.html#raju">View mobile preview ↗</a></div><div class="hero-art"><div class="hero-orbit">🏬</div></div></section>
+<div class="section-title"><div><h2>Explore demo stores</h2><p>Separate catalogues, offers and shopkeeper accounts.</p></div><span class="pill">2 storefronts</span></div>
+<div class="grid2">
+<article class="shop-card"><div class="shop-cover"><span class="cover-bubble">Groceries</span><span class="cover-icon">🛒</span></div><div class="shop-details"><h3>Raju General Stores</h3><p>Everyday essentials, delivered with a personal touch.</p><div class="meta"><span>6 demo products</span><span>SHOP001</span></div><a class="btn dark" href="./mobile-preview.html#raju">View products →</a></div></article>
+<article class="shop-card"><div class="shop-cover fashion"><span class="cover-bubble">Fashion</span><span class="cover-icon">🧵</span></div><div class="shop-details"><h3>Lakshmi Fashion Boutique</h3><p>Beautiful everyday wear and festive collections.</p><div class="meta"><span>6 demo products</span><span>SHOP002</span></div><a class="btn dark" href="./mobile-preview.html#lakshmi">View products →</a></div></article>
+</div>
+<div class="section-title"><div><h2>My Websites</h2><p>Example URLs generated for each shopkeeper.</p></div><span class="tag">Not published</span></div>
+<div class="grid2">
+<div class="website-tile"><div class="website-identity"><span class="website-icon">🛒</span><div><h3>Raju General Stores</h3><p>USER001 · SHOP001</p></div></div><div class="website-url">smartshop.vrisama.in/raju-stores</div><p class="website-muted">Example address only; this site is not live yet.</p><div class="website-actions"><a class="btn outline" href="./mobile-preview.html#raju">Preview store ↗</a></div></div>
+<div class="website-tile"><div class="website-identity"><span class="website-icon">🧵</span><div><h3>Lakshmi Fashion Boutique</h3><p>USER002 · SHOP002</p></div></div><div class="website-url">smartshop.vrisama.in/lakshmi-fashion</div><p class="website-muted">Example address only; this site is not live yet.</p><div class="website-actions"><a class="btn outline" href="./mobile-preview.html#lakshmi">Preview store ↗</a></div></div>
+</div><div class="note" style="margin-top:20px"><strong>Preview mode:</strong> This static overview works even when your phone blocks JavaScript inside HTML attachments. For the interactive cart and admin demonstration, open the deployed website in Safari or Chrome.</div>
+</div>
+</main>
+</div>
+<div id="overlay"></div><div id="toast-holder" aria-live="polite"></div>
+<script>
+(()=>{
+  'use strict';
+  const KEY='vrisama.smartshop.demo.v1';
+  const DAY_LIMIT=1;
+  const COLORS=['f1','f2','f3','f4','f5','f6'];
+  const BANNED=/\b(?:gun|firearm|ammo|ammunition|explosive|bomb|drug|cocaine|heroin|cannabis|marijuana|cigarette|tobacco|vape|alcohol|liquor|porn|counterfeit|steroid|weapon|knife|pesticide|poison)\b/i;
+  const escapeHTML=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const fmtINR=n=>'₹'+Number(n||0).toLocaleString('en-IN',{maximumFractionDigits:0});
+  const stamp=d=>new Date(d).toLocaleString('en-IN',{dateStyle:'medium',timeStyle:'short',timeZone:'Asia/Kolkata'});
+  const todayIST=()=>{const parts=new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Kolkata',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());const get=k=>parts.find(x=>x.type===k).value;return `${get('year')}-${get('month')}-${get('day')}`;};
+  const id=prefix=>prefix+'-'+Math.random().toString(36).slice(2,10);
+  const until=(hours)=>new Date(Date.now()+hours*3600e3).toISOString();
+  const seed=()=>({
+    schema:1,
+    shops:[
+      {id:'SHOP001',ownerId:'USER001',slug:'raju-stores',name:'Raju General Stores',category:'Groceries',icon:'🛒',tagline:'Everyday essentials, delivered with a personal touch.',whatsapp:''},
+      {id:'SHOP002',ownerId:'USER002',slug:'lakshmi-fashion',name:'Lakshmi Fashion Boutique',category:'Fashion',icon:'🧵',tagline:'Beautiful everyday wear and festive collections.',whatsapp:''}
+    ],
+    owners:[{id:'USER001',name:'Raju (demo account)'},{id:'USER002',name:'Lakshmi (demo account)'}],
+    products:[
+      {id:'P001',shopId:'SHOP001',name:'Basmati Rice 5kg',price:480,emoji:'🍚',color:'f1'},
+      {id:'P002',shopId:'SHOP001',name:'Sunflower Oil 1L',price:165,emoji:'🫙',color:'f6'},
+      {id:'P003',shopId:'SHOP001',name:'Wheat Flour 5kg',price:240,emoji:'🌾',color:'f2'},
+      {id:'P004',shopId:'SHOP001',name:'Premium Tea 250g',price:190,emoji:'🍵',color:'f4'},
+      {id:'P005',shopId:'SHOP001',name:'Sugar 1kg',price:54,emoji:'🍬',color:'f5'},
+      {id:'P006',shopId:'SHOP001',name:'Assorted Biscuits',price:85,emoji:'🍪',color:'f6'},
+      {id:'P007',shopId:'SHOP002',name:'Silk Saree',price:2490,emoji:'🥻',color:'f5'},
+      {id:'P008',shopId:'SHOP002',name:'Cotton Kurti',price:790,emoji:'👗',color:'f3'},
+      {id:'P009',shopId:'SHOP002',name:'Printed Dupatta',price:450,emoji:'🧣',color:'f2'},
+      {id:'P010',shopId:'SHOP002',name:'Ethnic Jacket',price:1590,emoji:'🧥',color:'f4'},
+      {id:'P011',shopId:'SHOP002',name:'Casual Shirt',price:680,emoji:'👕',color:'f1'},
+      {id:'P012',shopId:'SHOP002',name:'Festive Dress',price:1890,emoji:'👘',color:'f6'}
+    ],
+    offers:[
+      {id:'OF001',shopId:'SHOP001',productId:'P002',percent:20,expiresAt:until(144)},
+      {id:'OF002',shopId:'SHOP002',productId:'P007',percent:30,expiresAt:until(96)}
+    ],
+    pending:[],audit:[],publicationCounts:{},settings:{billingEnabled:false,plan:'Prototype'}
+  });
+  const load=()=>{try{const v=JSON.parse(localStorage.getItem(KEY));return v?.schema===1?v:seed();}catch{return seed();}};
+  let state=load();
+  let chosenOwner='USER001', chosenShopId=null, ownerTab='products', carts={}, draftImage=null, expiryTimer=null;
+  const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(state));}catch{toast('Browser storage is full. Try a smaller image or reset the demo.');}};
+  const shopById=sid=>state.shops.find(s=>s.id===sid);
+  const ownerShops=()=>state.shops.filter(s=>s.ownerId===chosenOwner);
+  const currentShop=()=>ownerShops().find(s=>s.id===chosenShopId)||ownerShops()[0];
+  const urlSlug=name=>String(name).normalize('NFKD').toLowerCase().replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,46);
+  const shopExampleUrl=s=>`https://smartshop.vrisama.in/${encodeURIComponent(s.slug)}`;
+  const publicDemoAvailable=()=>location.protocol==='https:'&&!['localhost','127.0.0.1'].includes(location.hostname);
+  const shopShareUrl=s=>publicDemoAvailable()?`${location.origin}${location.pathname}#/shop/${encodeURIComponent(s.slug)}`:shopExampleUrl(s);
+  const nextShopId=()=>`SHOP${String(Math.max(0,...state.shops.map(s=>Number(String(s.id).replace(/^SHOP/,''))||0))+1).padStart(3,'0')}`;
+  const shopCategories={Groceries:['🛒','Everyday essentials for your family.'],Fashion:['🧵','Festive styles and everyday classics.'],Electronics:['🔌','Useful electronics for daily life.'],Home:['🏠','Quality essentials for your home.'],General:['🏪','Your neighbourhood shop, now online.']};
+  const shopProducts=sid=>state.products.filter(p=>p.shopId===sid);
+  const validOffers=sid=>state.offers.filter(o=>o.shopId===sid && Date.parse(o.expiresAt)>Date.now() && state.products.some(p=>p.id===o.productId&&p.shopId===sid));
+  const usage=ownerId=>state.publicationCounts[ownerId+':'+todayIST()]||0;
+  const remain=ownerId=>Math.max(0,DAY_LIMIT-usage(ownerId));
+  const log=(action,ownerId,shopId,status,detail)=>{state.audit.unshift({id:id('L'),at:new Date().toISOString(),action,ownerId,shopId,status,detail:String(detail||'').slice(0,130)});state.audit=state.audit.slice(0,100);save();};
+  const toast=msg=>{const holder=document.querySelector('#toast-holder');holder.innerHTML='<div class="toast" role="status">'+escapeHTML(msg)+'</div>';setTimeout(()=>holder.replaceChildren(),4200);};
+  const navTitle=(title,sub)=>{document.querySelector('#page-title').textContent=title;document.querySelector('#page-subtitle').textContent=sub;};
+  const escapeAttr=escapeHTML;
+  const productArt=p=>p.image?`<img src="${escapeAttr(p.image)}" alt="${escapeAttr(p.name)} product photograph">`:`<span aria-hidden="true">${escapeHTML(p.emoji||'📦')}</span>`;
+  const offerHTML=sid=>{const list=validOffers(sid);if(!list.length)return '';return list.map(o=>{const p=state.products.find(x=>x.id===o.productId);return `<div class="offer-strip"><div><b>${escapeHTML(p.name)} · Festival special</b><small>Offer ends ${escapeHTML(stamp(o.expiresAt))} (IST) · Auto-hides at expiry</small></div><div class="discount">${o.percent}% OFF</div></div>`;}).join('');};
+  const countNav=(name)=>{document.querySelectorAll('[data-nav]').forEach(n=>n.classList.toggle('active',n.dataset.nav===name));};
+  const discover=()=>{
+    navTitle('Discover SmartShop','Two independent storefronts, one shared application.');countNav('discover');
+    return `<section class="hero"><div><div class="eyebrow">VRISAMA · SMART COMMERCE</div><h2>Every local shop deserves a digital storefront.</h2><p>Built for shopkeepers, designed for customers. Browse products, see offers, and prepare a WhatsApp order—without a checkout account.</p><a class="btn primary" href="#/shop/raju-stores">Explore a demo store ↗</a></div><div class="hero-art"><div class="hero-orbit" aria-hidden="true">🏬</div></div></section>
+    <div class="section-title"><div><h2>Explore demo stores</h2><p>Separate catalogues, offers, and WhatsApp destinations.</p></div><span class="pill">2 storefronts</span></div>
+    <div class="grid2">${state.shops.map(s=>`<article class="shop-card"><div class="shop-cover ${s.category==='Fashion'?'fashion':''}"><span class="cover-bubble">${escapeHTML(s.category)}</span><span class="cover-icon" aria-hidden="true">${s.icon}</span></div><div class="shop-details"><h3>${escapeHTML(s.name)}</h3><p>${escapeHTML(s.tagline)}</p><div class="meta"><span>${shopProducts(s.id).length} products</span><span>${validOffers(s.id).length} active offers</span><span>${escapeHTML(s.id)}</span></div><a href="#/shop/${encodeURIComponent(s.slug)}" class="btn dark">View storefront →</a></div></article>`).join('')}</div>
+    <div style="margin-top:21px" class="note"><strong>Privacy-first demo:</strong> Products and quantities are prepared for WhatsApp only after the customer chooses to order. No customer account, payment gateway, or order-history database is included.</div>`;
+  };
+  const storePage=slug=>{
+    const s=state.shops.find(x=>x.slug===slug);if(!s){navTitle('Store unavailable','Please return to the shop list.');return `<div class="panel">Store not found. <a class="back" href="#/discover">Return to all stores →</a></div>`;}
+    navTitle(s.name,'Individual shop page · '+s.id);countNav('discover');const products=shopProducts(s.id);const cart=carts[s.id]||{};
+    const entries=Object.entries(cart).filter(([pid,q])=>q>0&&products.some(p=>p.id===pid));
+    const total=entries.reduce((sum,[pid,q])=>sum+products.find(p=>p.id===pid).price*q,0);
+    return `<div class="shop-head"><div><a class="back" href="#/discover">← All demo shops</a><h2>${escapeHTML(s.icon)} ${escapeHTML(s.name)}</h2><span class="muted">${escapeHTML(s.tagline)}</span></div><span class="pill">${escapeHTML(s.category)}</span></div>${offerHTML(s.id)}
+    <div class="store-layout"><div><div class="section-title" style="margin-top:0"><div><h2>Shop products</h2><p>Select quantities and add items to your cart.</p></div><span class="pill">${products.length} items</span></div><div class="products">${products.map(p=>`<article class="product-card"><div class="product-art ${p.color||'f1'}">${productArt(p)}</div><div class="product-info"><h4>${escapeHTML(p.name)}</h4><div class="price">${fmtINR(p.price)}</div><button class="btn outline small" data-add="${p.id}" data-shop="${s.id}" aria-label="Add ${escapeAttr(p.name)} to cart">＋ Add to cart</button></div></article>`).join('')}</div></div>
+    <aside class="panel cart"><h3>🧺 Your order</h3><p class="muted">Only products and quantities go into the prepared message.</p>${entries.length?entries.map(([pid,q])=>{const p=products.find(x=>x.id===pid);return `<div class="cart-row"><div><b>${escapeHTML(p.name)}</b><small>${fmtINR(p.price)} each</small></div><div class="qty"><button data-minus="${pid}" data-shop="${s.id}" aria-label="Decrease quantity">−</button><b>${q}</b><button data-plus="${pid}" data-shop="${s.id}" aria-label="Increase quantity">+</button></div></div>`;}).join(''):'<div class="list-empty">Your cart is empty.<br>Add a product to begin.</div>'}
+    <div class="cart-total"><span>Estimated total</span><strong>${fmtINR(total)}</strong></div><button class="btn dark" data-order="${s.id}" ${entries.length?'':'disabled'}>Review WhatsApp order →</button><p class="subcopy" style="margin-bottom:0">No payment occurs here. The customer must press Send in WhatsApp.</p></aside></div>`;
+  };
+  const myWebsitesPage=()=>{
+    countNav('websites');navTitle('My Websites','Preview your storefronts and manage their unique website addresses.');
+    const shops=ownerShops(); const owner=state.owners.find(o=>o.id===chosenOwner);
+    const drafts=state.pending.filter(p=>p.ownerId===chosenOwner&&p.type==='shop'&&p.status==='pending');
+    return `<section class="hero" style="min-height:180px;padding:25px 28px"><div><div class="eyebrow">MY WEBSITES · SHOPKEEPER PORTAL</div><h2 style="font-size:30px">Your shops. Your own links.</h2><p style="margin-bottom:0">Create a storefront, get a unique address, and share it with customers after publishing.</p></div><div class="hero-art" style="flex-basis:85px"><div class="hero-orbit" style="font-size:62px">🌐</div></div></section>
+    <div class="panel" style="margin:18px 0"><div class="form-grid"><div class="field"><label for="websites-owner">Select shopkeeper (demo only)</label><select id="websites-owner">${state.owners.map(o=>`<option value="${escapeAttr(o.id)}" ${o.id===chosenOwner?'selected':''}>${escapeHTML(o.name)}</option>`).join('')}</select></div><div class="field"><label>Your User ID</label><input disabled value="${escapeAttr(owner?.id||'')}"></div></div><div class="meta" style="margin:16px 0 0"><span>${shops.length} website${shops.length!==1?'s':''} on this account</span><span>${remain(chosenOwner)} of ${DAY_LIMIT} publishing actions left today</span></div></div>
+    <div class="section-title"><div><h2>Your storefronts</h2><p>Each website uses its own Shop ID, catalogue, and WhatsApp destination.</p></div></div>
+    <div class="grid2">${shops.map(s=>`<div class="website-tile"><div class="website-identity"><div class="website-icon">${escapeHTML(s.icon)}</div><div><h3>${escapeHTML(s.name)}</h3><p>${escapeHTML(s.id)} · ${escapeHTML(s.category)}</p></div></div><div><span class="subcopy">PLANNED PUBLIC ADDRESS</span><div class="website-url">${escapeHTML(shopExampleUrl(s))}</div></div><div class="website-muted">${publicDemoAvailable()?'A shareable prototype link is available on this hosted demo. This is not a production store.':'The proposed domain is not connected. Copying the planned address does not make it live.'}</div><div class="website-actions"><a class="btn dark" href="#/shop/${encodeURIComponent(s.slug)}">👁 Preview store</a><button class="btn outline" data-copy-shop="${escapeAttr(s.id)}">⧉ ${publicDemoAvailable()?'Copy demo link':'Copy example URL'}</button>${publicDemoAvailable()?`<button class="btn outline" data-share-shop="${escapeAttr(s.id)}">↗ Share demo</button>`:'<button class="btn outline" disabled title="Available after deployment">↗ Share (after launch)</button>'}</div></div>`).join('')}</div>
+    ${drafts.length?`<div class="section-title"><div><h2>Waiting for approval</h2><p>Only approved storefronts receive a shop ID.</p></div></div><div class="item-list">${drafts.map(p=>`<div class="item"><div><h4>${escapeHTML(p.data.name)}</h4><p>Proposed URL: smartshop.vrisama.in/${escapeHTML(p.data.slug)}</p></div><span class="status pending">Pending</span></div>`).join('')}</div>`:''}
+    <div class="section-title"><div><h2>Request another website</h2><p>Store creation is simulated and requires administrator approval.</p></div></div>
+    <section class="panel"><form id="create-shop-form" class="form-grid" autocomplete="off"><div class="field"><label for="shop-name">Business name</label><input id="shop-name" name="shopName" maxlength="55" placeholder="Example: Raju Electronics" required></div><div class="field"><label for="shop-category">Business category</label><select id="shop-category" name="category">${Object.keys(shopCategories).map(c=>`<option value="${c}">${c}</option>`).join('')}</select></div><div class="form-actions"><button class="btn dark" type="submit">＋ Request new website</button><span class="subcopy">A unique URL will be generated. Approval uses the same one-change-per-day allowance.</span></div></form></section>
+    <div class="note warning website-banner"><strong>Prototype limitation:</strong> These are sample storefronts stored in this browser, not publicly published websites. Real website creation, ownership verification, URL routing, and sharing must be implemented in the backend before customer use.</div>`;
+  };
+  const ownerPage=()=>{
+    countNav('owner');navTitle('Shopkeeper studio','Upload products and create structured offers.');
+    const s=currentShop();const products=shopProducts(s.id);const owner=state.owners.find(o=>o.id===chosenOwner);
+    return `<section class="hero" style="min-height:180px;padding:26px 30px"><div><div class="eyebrow">SHOPKEEPER DEMO</div><h2 style="font-size:29px">Manage your store without technical steps.</h2><p style="margin-bottom:0">This demo simulates a logged-in shopkeeper; production will require secure identity verification.</p></div><div class="hero-art" style="flex-basis:90px"><span class="hero-orbit" style="font-size:60px">📱</span></div></section>
+    <div class="section-title"><div><h2>My business</h2><p>Account and shop records remain separate.</p></div></div>
+    <div class="panel" style="margin-bottom:18px"><div class="form-grid"><div class="field"><label for="owner-select">Act as (demo only)</label><select id="owner-select">${state.owners.map(o=>`<option value="${o.id}" ${o.id===chosenOwner?'selected':''}>${escapeHTML(o.name)}</option>`).join('')}</select></div><div class="field"><label for="owner-shop-select">Choose your storefront</label><select id="owner-shop-select">${ownerShops().map(o=>`<option value="${escapeAttr(o.id)}" ${o.id===s.id?'selected':''}>${escapeHTML(o.name+' · '+o.id)}</option>`).join('')}</select></div></div><div class="meta" style="margin-top:16px;margin-bottom:0"><span>User ID: ${escapeHTML(owner.id)}</span><span>Published today: ${usage(chosenOwner)} / ${DAY_LIMIT}</span><span>Next allowance: midnight IST</span></div><div style="margin-top:13px"><a class="btn outline small" href="#/websites">🌐 My Websites — view & share links →</a></div></div>
+    <div class="statrow"><div class="stat"><small>PRODUCTS LIVE</small><div class="num">${products.length}</div><small>In this storefront</small></div><div class="stat"><small>OFFERS ACTIVE</small><div class="num">${validOffers(s.id).length}</div><small>Expiry is automatic</small></div><div class="stat"><small>CHANGES LEFT TODAY</small><div class="num">${remain(chosenOwner)}</div><small>Across all shops on this account</small></div></div>
+    <div class="tabbar"><button class="tab ${ownerTab==='products'?'active':''}" data-tab="products">＋ Add product</button><button class="tab ${ownerTab==='offers'?'active':''}" data-tab="offers">✦ Create offer</button><button class="tab ${ownerTab==='settings'?'active':''}" data-tab="settings">⚙ Store settings</button></div>
+    ${ownerTab==='products'?productForm(s):ownerTab==='offers'?offerForm(s):settingsForm(s)}
+    <div class="section-title"><div><h2>Submitted changes</h2><p>Only a demo administrator can approve publication.</p></div></div>
+    ${pendingList(chosenOwner)}
+    <div style="margin-top:16px" class="note warning"><strong>Demo safety:</strong> A real backend must enforce authentication, catalog restrictions, image moderation, audit integrity, and the publishing limit. This browser-only demo cannot secure these controls against manipulation.</div>`;
+  };
+  const productForm=s=>`<section class="panel"><h3>New catalogue item</h3><p>Use a clear product name. General messages, chat, links, and arbitrary HTML are not supported.</p><form id="product-form" class="form-grid" autocomplete="off"><div class="field"><label for="p-name">Product name</label><input id="p-name" name="name" placeholder="Example: Organic Rice 5kg" maxlength="55" required></div><div class="field"><label for="p-price">Price in ₹</label><input id="p-price" name="price" type="number" min="1" max="500000" step="1" placeholder="499" required></div><div class="field wide"><label for="p-photo">Optional product photograph (JPG, PNG or WebP, below 700 KB)</label><input id="p-photo" name="photo" type="file" accept="image/jpeg,image/png,image/webp"></div><div class="form-actions"><button class="btn dark" type="submit">Submit product for review →</button><span class="subcopy">No AI credits used for a normal catalogue update.</span></div></form></section>`;
+  const offerForm=s=>`<section class="panel"><h3>Generate an offer banner</h3><p>A structured, template-generated promotional banner is used in this demo; no AI API calls or arbitrary ad text.</p><form id="offer-form" class="form-grid"><div class="field"><label for="o-product">Product</label><select id="o-product" name="product">${shopProducts(s.id).map(p=>`<option value="${p.id}">${escapeHTML(p.name)}</option>`).join('')}</select></div><div class="field"><label for="o-percent">Discount (%)</label><input id="o-percent" name="percent" type="number" min="1" max="90" value="20" required></div><div class="field wide"><label for="o-end">Offer expires (your device time)</label><input id="o-end" name="expires" type="datetime-local" required></div><div class="form-actions"><button type="button" class="btn outline" id="preview-offer">Preview banner</button><button type="submit" class="btn dark">Submit offer for review →</button></div></form><div id="offer-preview" style="margin-top:18px" aria-live="polite"></div></section>`;
+  const settingsForm=s=>`<section class="panel"><h3>Business WhatsApp number</h3><p>Needed only to open the customer's order in the correct shopkeeper's WhatsApp chat. The prototype does not collect customer contact information.</p><form id="whatsapp-form" class="form-grid"><div class="field wide"><label for="w-phone">Business number with country code (example: 91XXXXXXXXXX)</label><input id="w-phone" name="phone" inputmode="numeric" autocomplete="off" maxlength="15" value="${escapeAttr(s.whatsapp||'')}" placeholder="Enter a test business number"></div><div class="form-actions"><button type="submit" class="btn dark">Submit number for approval →</button><span class="subcopy">Changes to contact destinations are audited and require approval.</span></div></form></section>`;
+  const pendingList=ownerId=>{const pending=state.pending.filter(p=>p.ownerId===ownerId).slice().reverse();return pending.length?`<div class="item-list">${pending.map(p=>`<div class="item"><div><h4>${escapeHTML(p.type==='product'?'📦 New product':p.type==='offer'?'✦ New offer':p.type==='shop'?'🌐 New website':'☎ WhatsApp destination')} · ${escapeHTML(shopById(p.shopId)?.name||'')}</h4><p>${escapeHTML(describe(p))} · ${escapeHTML(stamp(p.createdAt))}</p></div><span class="status ${p.status}">${escapeHTML(p.status)}</span></div>`).join('')}</div>`:'<div class="list-empty">No submitted changes yet. Try adding a product or creating an offer.</div>';};
+  const describe=p=>p.type==='product'?p.data.name+' · '+fmtINR(p.data.price):p.type==='offer'?`${p.data.percent}% offer on ${state.products.find(x=>x.id===p.data.productId)?.name||'product'}`:p.type==='shop'?'New website: '+p.data.name:'Business WhatsApp destination update';
+  const adminPage=()=>{
+    countNav('admin');navTitle('Administrative controls','Publishing decisions and audit visibility—without reading private chats.');
+    const queue=state.pending.filter(p=>p.status==='pending');
+    return `<div class="note warning"><strong>Demo role switch only:</strong> this page is intentionally accessible for evaluation. Production must restrict it to authenticated administrators and store audit records on the server.</div>
+    <div class="statrow" style="margin-top:19px"><div class="stat"><small>AWAITING REVIEW</small><div class="num">${queue.length}</div><small>Not yet published</small></div><div class="stat"><small>APPROVED SHOPS</small><div class="num">${state.shops.length}</div><small>Demo seed data</small></div><div class="stat"><small>AUDIT EVENTS</small><div class="num">${state.audit.length}</div><small>Local browser demo only</small></div></div>
+    <div class="section-title"><div><h2>Content approval queue</h2><p>Review product names, discounts, and destination changes before publishing.</p></div></div>
+    ${queue.length?`<div class="item-list">${queue.map(p=>`<div class="item"><div><h4>${escapeHTML(p.type.toUpperCase())} · ${escapeHTML(shopById(p.shopId)?.name||'')}</h4><p>${escapeHTML(describe(p))} · By ${escapeHTML(p.ownerId)} · ${escapeHTML(stamp(p.createdAt))}</p></div><div style="display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end"><button class="btn primary small" data-approve="${p.id}">Approve</button><button class="btn danger small" data-reject="${p.id}">Reject</button></div></div>`).join('')}</div>`:'<div class="list-empty">Review queue is empty.</div>'}
+    <div class="section-title"><div><h2>Activity audit</h2><p>Only application events. No customer WhatsApp messages or personal shopping history.</p></div><button class="btn outline small" id="export-audit">Download audit CSV</button></div>
+    <div class="panel audit-scroll" style="padding:12px 16px">${state.audit.length?`<table class="audit-table"><thead><tr><th>When (IST)</th><th>Actor</th><th>Shop</th><th>Action</th><th>Result</th></tr></thead><tbody>${state.audit.map(l=>`<tr><td>${escapeHTML(stamp(l.at))}</td><td>${escapeHTML(l.ownerId||'ADMIN')}</td><td>${escapeHTML(l.shopId||'—')}</td><td>${escapeHTML(l.action)}<br><span class="subcopy">${escapeHTML(l.detail)}</span></td><td><span class="status ${escapeAttr(l.status)}">${escapeHTML(l.status)}</span></td></tr>`).join('')}</tbody></table>`:'<div class="list-empty">No activity yet. Submit a change from the Shopkeeper page to test the audit.</div>'}</div>
+    <div class="section-title"><div><h2>Control model</h2><p>Production requirements, not claims of live enforcement.</p></div></div>
+    <div class="grid2"><div class="panel"><h3>What is restricted</h3><p>Only approved product records, discounts, expiry dates, and quantity-only order templates. No open chat, arbitrary script generation, custom buyer message, or payment collection.</p></div><div class="panel"><h3>What is visible</h3><p>Shopkeeper submissions, content approvals, rejections, publication counts, configuration changes, and errors. Direct WhatsApp conversation content remains outside Vrisama.</p></div></div>`;
+  };
+  const plansPage=()=>{
+    countNav('plans');navTitle('Subscription-ready design','Billing is disabled while the prototype is being evaluated.');
+    return `<section class="hero" style="min-height:190px"><div><div class="eyebrow">FUTURE BUSINESS MODEL</div><h2 style="font-size:32px">Start simple. Add subscriptions later.</h2><p>Billing settings are represented in the data model, but there are no live payments, checkout buttons, or subscription enforcement integrations.</p></div><div class="hero-art"><div class="hero-orbit" style="font-size:72px">🔒</div></div></section>
+    <div class="section-title"><div><h2>Proposed plans</h2><p>Illustrative feature tiers—no pricing or billing activated.</p></div><span class="pill">Billing off</span></div>
+    <div class="grid2"><div class="panel"><span class="pill">Pilot</span><h3 style="margin-top:12px">Starter</h3><p>One daily approved change per owner account, structured product catalogue, promotional offers, WhatsApp handoff, and basic support.</p><button class="btn outline" disabled>Demo tier · No charge</button></div><div class="panel"><span class="pill">Future</span><h3 style="margin-top:12px">Growth</h3><p>Higher publishing limits, more shop locations, custom domains, premium assistance, and advanced publishing tools—only after controlled testing.</p><button class="btn outline" disabled>Coming later</button></div></div>
+    <div style="margin-top:18px" class="note">One daily publication limit is enforced only inside this local demonstration. Production requires an atomic server-side quota check so two simultaneous requests cannot bypass the limit.</div>`;
+  };
+  function render(){if(expiryTimer)clearTimeout(expiryTimer);const path=decodeURIComponent(location.hash.replace(/^#\//,'')||'discover');const [route,...args]=path.split('/');let html='';if(route==='shop')html=storePage(args.join('/'));else if(route==='owner')html=ownerPage();else if(route==='websites')html=myWebsitesPage();else if(route==='admin')html=adminPage();else if(route==='plans')html=plansPage();else html=discover();document.querySelector('#content').innerHTML=html;attach();if(route==='shop'){const shop=state.shops.find(s=>s.slug===args.join('/'));if(shop){const active=validOffers(shop.id);if(active.length){const next=Math.min(...active.map(o=>Date.parse(o.expiresAt)));expiryTimer=setTimeout(()=>render(),Math.max(20,next-Date.now()+40));}}}}
+  function attach(){
+    document.querySelectorAll('[data-add]').forEach(el=>el.addEventListener('click',()=>adjustCart(el.dataset.shop,el.dataset.add,1)));
+    document.querySelectorAll('[data-plus]').forEach(el=>el.addEventListener('click',()=>adjustCart(el.dataset.shop,el.dataset.plus,1)));
+    document.querySelectorAll('[data-minus]').forEach(el=>el.addEventListener('click',()=>adjustCart(el.dataset.shop,el.dataset.minus,-1)));
+    document.querySelectorAll('[data-order]').forEach(el=>el.addEventListener('click',()=>orderPreview(el.dataset.order)));
+    document.querySelectorAll('[data-tab]').forEach(el=>el.addEventListener('click',()=>{ownerTab=el.dataset.tab;draftImage=null;render();}));
+    const setOwner=e=>{chosenOwner=e.target.value;chosenShopId=null;ownerTab='products';render();};
+    for(const sel of ['#owner-select','#websites-owner']){const input=document.querySelector(sel);if(input)input.addEventListener('change',setOwner);}
+    const shopSelect=document.querySelector('#owner-shop-select');if(shopSelect)shopSelect.addEventListener('change',e=>{chosenShopId=e.target.value;ownerTab='products';render();});
+    const createShopForm=document.querySelector('#create-shop-form');if(createShopForm)createShopForm.addEventListener('submit',requestShop);
+    document.querySelectorAll('[data-copy-shop]').forEach(el=>el.addEventListener('click',()=>copyShopUrl(el.dataset.copyShop)));
+    document.querySelectorAll('[data-share-shop]').forEach(el=>el.addEventListener('click',()=>shareShopUrl(el.dataset.shareShop)));
+    const photo=document.querySelector('#p-photo');if(photo)photo.addEventListener('change',handlePhoto);
+    const productFormEl=document.querySelector('#product-form');if(productFormEl)productFormEl.addEventListener('submit',submitProduct);
+    const offerFormEl=document.querySelector('#offer-form');if(offerFormEl){offerFormEl.addEventListener('submit',submitOffer);const field=document.querySelector('#o-end');const d=new Date(Date.now()+48*3600e3);field.value=new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,16);document.querySelector('#preview-offer').addEventListener('click',previewOffer);}
+    const wpForm=document.querySelector('#whatsapp-form');if(wpForm)wpForm.addEventListener('submit',submitWhatsApp);
+    document.querySelectorAll('[data-approve]').forEach(el=>el.addEventListener('click',()=>decide(el.dataset.approve,true)));
+    document.querySelectorAll('[data-reject]').forEach(el=>el.addEventListener('click',()=>decide(el.dataset.reject,false)));
+    const exportBtn=document.querySelector('#export-audit');if(exportBtn)exportBtn.addEventListener('click',exportAudit);
+  }
+  async function copyShopUrl(sid){const s=ownerShops().find(x=>x.id===sid);if(!s)return;const address=shopShareUrl(s);
+    try{if(navigator.clipboard?.writeText){await navigator.clipboard.writeText(address);}else{const e=document.createElement('textarea');e.value=address;e.style.position='fixed';e.style.opacity='0';document.body.append(e);e.select();if(!document.execCommand('copy'))throw Error('Copy not supported');e.remove();}toast(publicDemoAvailable()?'Demo preview link copied.':'Example URL copied (not live).');}
+    catch{toast('Copy unavailable here. You can select the example address manually.');}}
+  async function shareShopUrl(sid){const s=ownerShops().find(x=>x.id===sid);if(!s||!publicDemoAvailable()){toast('Sharing is available after the website is hosted.');return;}const url=shopShareUrl(s);if(navigator.share){try{await navigator.share({title:s.name,url});}catch(e){if(e.name!=='AbortError')toast('Sharing unavailable on this device.');}}else{window.open('https://wa.me/?text='+encodeURIComponent(`${s.name}: ${url}`),'_blank','noopener,noreferrer');}}
+  function requestShop(e){e.preventDefault();const name=String(e.currentTarget.elements.shopName.value||'').trim();const category=e.currentTarget.elements.category.value;
+    if(!safeProductName(name)||!Object.hasOwn(shopCategories,category)){toast('Use a standard, short business name without links or restricted terms.');return;}
+    if(queued(chosenOwner)>=3){toast('At most three changes may await approval.');return;}
+    const base=urlSlug(name);if(!base){toast('For this demo, include a few English letters or numbers in the shop name.');return;}
+    let slug=base,n=2;const taken=()=>state.shops.some(s=>s.slug===slug)||state.pending.some(p=>p.type==='shop'&&p.status==='pending'&&p.data.slug===slug);
+    while(taken())slug=base+'-'+n++;
+    const p={id:id('REQ'),type:'shop',data:{name,category,slug},shopId:'',ownerId:chosenOwner,status:'pending',createdAt:new Date().toISOString()};state.pending.push(p);log('Requested website',chosenOwner,'','pending',name+' · '+slug);toast('Website requested. An administrator must approve it before the store appears.');render();}
+  function adjustCart(sid,pid,delta){if(!state.products.some(p=>p.id===pid&&p.shopId===sid))return;const curr=carts[sid]||{};const next=Math.min(20,Math.max(0,(curr[pid]||0)+delta));curr[pid]=next;carts[sid]=curr;render();}
+  function orderPreview(sid){const shop=shopById(sid);if(!shop)return;const products=shopProducts(sid);const entries=Object.entries(carts[sid]||{}).filter(([pid,q])=>Number.isInteger(q)&&q>0&&q<=20&&products.some(p=>p.id===pid));if(!entries.length){toast('Add items to your order first.');return;}
+    // Buyer-controlled free text is intentionally unavailable. Only catalog product names and bounded quantities appear.
+    const lines=entries.map(([pid,q])=>`${products.find(p=>p.id===pid).name} x ${q}`);
+    const message=lines.join('\n');
+    const num=String(shop.whatsapp||'').replace(/\D/g,'');
+    const validPhone=/^[1-9]\d{7,14}$/.test(num);
+    document.querySelector('#overlay').innerHTML=`<div class="modal-backdrop" role="presentation"><section role="dialog" aria-modal="true" aria-labelledby="modal-title" class="modal"><h3 id="modal-title">WhatsApp order preview</h3><p class="muted">This is the complete prepared message. It contains only product names and quantities.</p><pre id="order-text">${escapeHTML(message)}</pre><p class="subcopy">${validPhone?'Opening WhatsApp requires an additional Send action from the customer.':'No shop WhatsApp number configured yet. Use Shopkeeper → Store settings to submit a business number for admin approval.'}</p><div class="modal-actions"><button class="btn dark" id="copy-order">Copy order</button>${validPhone?'<button class="btn primary" id="open-whatsapp">Open WhatsApp ↗</button>':''}<button class="btn outline" id="close-modal">Close</button></div></section></div>`;
+    document.querySelector('#close-modal').addEventListener('click',closeModal);
+    document.querySelector('.modal-backdrop').addEventListener('click',e=>{if(e.target.classList.contains('modal-backdrop'))closeModal();});
+    document.querySelector('#copy-order').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(message);toast('Order text copied.');}catch{toast('Copy unavailable in this browser; select the preview text to copy it.');}});
+    if(validPhone)document.querySelector('#open-whatsapp').addEventListener('click',()=>{window.open(`https://wa.me/${num}?text=${encodeURIComponent(message)}`,'_blank','noopener,noreferrer');});
+  }
+  function closeModal(){document.querySelector('#overlay').replaceChildren();}
+  const safeProductName=name=>{const n=name.trim();return n.length>=3&&n.length<=55&&/^[\p{L}\p{N}][\p{L}\p{N}\s.,&()\-]{2,54}$/u.test(n)&&!BANNED.test(n)&&!/(https?:|www\.|@|\d{8,}|\p{L}{30,})/iu.test(n);};
+  const queued=owner=>state.pending.filter(p=>p.ownerId===owner&&p.status==='pending').length;
+  function makePending(type,data){const s=currentShop();if(queued(chosenOwner)>=3){log('Submission limit',chosenOwner,s.id,'blocked','No more than three pending changes');toast('You already have three pending submissions.');return false;}const p={id:id('REQ'),type,data,shopId:s.id,ownerId:chosenOwner,status:'pending',createdAt:new Date().toISOString()};state.pending.push(p);log('Submitted '+type,chosenOwner,s.id,'pending',describe(p));toast('Submitted for administrator review. Nothing is live yet.');render();return true;}
+  async function handlePhoto(e){draftImage=null;const file=e.target.files?.[0];if(!file)return;if(!['image/jpeg','image/png','image/webp'].includes(file.type)||file.size>700*1024){e.target.value='';toast('Use JPG, PNG or WebP under 700 KB.');return;}const reader=new FileReader();reader.onload=()=>{draftImage=String(reader.result);toast('Image added to pending product preview.');};reader.readAsDataURL(file);}
+  function submitProduct(e){e.preventDefault();const form=e.currentTarget;const name=form.elements.name.value.trim();const price=Number(form.elements.price.value);if(!safeProductName(name)){log('Product validation',chosenOwner,currentShop().id,'blocked','Invalid or restricted product name');toast('Product name rejected. Use a short, ordinary product name; no links, contact details, or restricted items.');return;}
+    if(!(Number.isInteger(price)&&price>=1&&price<=500000)){toast('Enter a whole-rupee price between 1 and 500,000.');return;}if(shopProducts(ownerShops()[0].id).some(p=>p.name.toLowerCase()===name.toLowerCase())){toast('This product already exists.');return;}
+    makePending('product',{name,price,image:draftImage});draftImage=null;
+  }
+  const offerData=()=>{const p=document.querySelector('#o-product')?.value;const pct=Number(document.querySelector('#o-percent')?.value);const end=document.querySelector('#o-end')?.value;const dt=Date.parse(end);if(!state.products.some(x=>x.id===p&&x.shopId===ownerShops()[0].id)||!Number.isInteger(pct)||pct<1||pct>90||!Number.isFinite(dt)||dt<=Date.now()||dt>Date.now()+366*864e5)return null;return {productId:p,percent:pct,expiresAt:new Date(dt).toISOString()};};
+  function previewOffer(){const d=offerData();if(!d){toast('Choose a product, 1–90% discount, and a future expiry within 12 months.');return;}const p=state.products.find(x=>x.id===d.productId);document.querySelector('#offer-preview').innerHTML=`<div class="offer-strip"><div><b>${escapeHTML(p.name)}</b><small>Expires ${escapeHTML(stamp(d.expiresAt))} (IST)</small></div><div class="discount">${d.percent}% OFF</div></div><p class="subcopy">Template preview only. In production, image generation would use approved AI API credits.</p>`;}
+  function submitOffer(e){e.preventDefault();const d=offerData();if(!d){toast('Invalid offer. Check discount and expiry.');return;}makePending('offer',d);}
+  function submitWhatsApp(e){e.preventDefault();const raw=String(document.querySelector('#w-phone').value||'');const normalized=raw.replace(/[\s+\-()]/g,'');if(!/^[1-9]\d{7,14}$/.test(normalized)){toast('Enter a valid business phone number with country code.');return;}makePending('whatsapp',{number:normalized});}
+  function decide(pid,approve){const p=state.pending.find(x=>x.id===pid&&x.status==='pending');if(!p)return;const shop=shopById(p.shopId);if(p.type!=='shop'&&!shop)return;const who=p.ownerId;
+    if(!approve){p.status='rejected';log('Review rejected',who,p.shopId,'rejected',describe(p));render();toast('Submission rejected; website unchanged.');return;}
+    if(remain(who)<=0){log('Publishing quota',who,p.shopId,'blocked','Daily allowance exhausted');render();toast('Publish blocked: this shopkeeper already used today’s one change.');return;}
+    if(p.type==='shop'){
+      const {name,category,slug}=p.data;if(!safeProductName(name)||!Object.hasOwn(shopCategories,category)||!slug||state.shops.some(s=>s.slug===slug)){toast('Website request is invalid or the URL is already taken.');return;}
+      const newid=nextShopId();const [icon,tagline]=shopCategories[category];state.shops.push({id:newid,ownerId:who,slug,name,category,icon,tagline,whatsapp:''});p.shopId=newid;if(chosenOwner===who)chosenShopId=newid;
+    }else if(p.type==='product'){
+      if(!safeProductName(p.data.name)||!Number.isInteger(p.data.price)||p.data.price<1||p.data.price>500000){log('Review validation',who,p.shopId,'blocked','Product data failed validation');toast('Blocked: invalid product content.');return;}
+      state.products.push({id:id('P'),shopId:p.shopId,name:p.data.name,price:p.data.price,image:p.data.image||'',emoji:'📦',color:COLORS[state.products.length%COLORS.length]});
+    }else if(p.type==='offer'){
+      if(!state.products.some(x=>x.id===p.data.productId&&x.shopId===p.shopId)||!(p.data.percent>=1&&p.data.percent<=90)||Date.parse(p.data.expiresAt)<=Date.now()){log('Review validation',who,p.shopId,'blocked','Invalid or expired offer');toast('Blocked: offer has expired or changed.');return;}
+      state.offers.push({id:id('OF'),shopId:p.shopId,...p.data});
+    }else if(p.type==='whatsapp'){
+      if(!/^[1-9]\d{7,14}$/.test(p.data.number)){toast('Blocked: business WhatsApp number invalid.');return;}
+      shop.whatsapp=p.data.number;
+    }else return;
+    p.status='approved';const quotaKey=who+':'+todayIST();state.publicationCounts[quotaKey]=(state.publicationCounts[quotaKey]||0)+1;
+    log('Published '+p.type,who,p.shopId,'approved',describe(p));render();toast(p.type==='shop'?'Website approved in this demo. The public domain is not live.':'Published successfully. Daily change allowance used.');
+  }
+  function exportAudit(){const fields=['at','ownerId','shopId','action','status','detail'];const csv=[fields.join(','),...state.audit.map(row=>fields.map(k=>'"'+String(row[k]||'').replace(/"/g,'""')+'"').join(','))].join('\r\n');const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download='smartshop-demo-audit.csv';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+  addEventListener('hashchange',()=>{closeModal();render();});
+  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')render();});
+  if('serviceWorker' in navigator && (location.protocol==='https:' || location.hostname==='localhost' || location.hostname==='127.0.0.1')) navigator.serviceWorker.register('./service-worker.js').catch(()=>{});
+  if(!location.hash)location.replace('#/discover');else render();
+})();
+</script>
+</body>
+</html>
