@@ -1,8 +1,8 @@
 {
   "id": "./",
-  "name": "Vrisama SmartShop Prototype",
+  "name": "Vrisama SmartShop v0.3.1 Development Preview",
   "short_name": "SmartShop",
-  "description": "Vrisama SmartShop v0.2.2 interactive demonstration; not for live customer transactions.",
+  "description": "Read-only hosted demo; real phone OTP, merchant authentication and payments are not available.",
   "start_url": "./#/discover",
   "scope": "./",
   "display": "standalone",
