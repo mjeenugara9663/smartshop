@@ -1,6 +1,6 @@
 # Vrisama SmartShop — Interactive prototype
 
-**Version:** 0.2 / browser-only proof of concept  
+**Version:** 0.2.2 (reviewed prototype) / browser-only proof of concept  
 **Intended future domain:** `smartshop.vrisama.in` (not yet deployed)  
 **GitHub repository:** `mjeenugara9663/smartshop` (created)
 
@@ -72,3 +72,14 @@ Some iPhone HTML attachment previews block JavaScript. When this happens, the or
 - **Preview** always works within the interactive demo. **Copy example URL** copies a future URL while clearly warning it isn't live; **Share demo** is only offered when the app is served from a publicly hosted HTTPS origin, and shares the actual hash-based demo URL.
 - The iPhone static `mobile-preview.html` also includes a non-interactive My Websites section.
 - Production needs server-side authentication, URL uniqueness enforcement, verified ownership, moderation, DNS/routing and actual deployment. The demo is *not* a working public storefront generator.
+
+## v0.2.1 review and v0.2.2 corrections
+
+- Verified product and shop names in Kannada, Hindi, Tamil, Telugu and Malayalam.
+- Improved validation for split or disguised prohibited terms while reducing false positives in ordinary words such as `மதுரை கடை`.
+- Confirmed `Kitchen Knife`, `Pesticide spray` and `Rat Poison` are allowed by the demo validator.
+- Corrected product duplicate checks and offer product selection so they use the currently selected storefront, rather than the owner's first store.
+- Corrected long-running offer expiry timers by limiting each timer to 24 hours and rechecking until the expiry.
+- Rechecked product duplication when an admin approves an item.
+
+The browser filter remains bypassable. It cannot recognize every code word or harmful listing, does not moderate images, and cannot securely enforce role permissions, quotas, or audit integrity. Persisted browser catalogues are not re-moderated on upgrade. Do not use this demonstration for live merchants or customer orders. Server-side validation and authorization must be completed before public commercial use.
